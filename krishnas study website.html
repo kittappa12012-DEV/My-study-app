@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kittappa Study Room - Your Personal Multimodal AI Space</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- PDF.js for local PDF text extraction -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+</head>
+<body>
+
+  <div id="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside>
+      <div class="sidebar-header">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2L14.85 9.15L22 12L14.85 14.85L12 22L9.15 14.85L2 12L9.15 9.15L12 2Z" />
+          </svg>
+        </div>
+        <span class="logo-text">Kittappa Room</span>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="menu-item active" id="nav-dashboard">
+          <span class="subject-icon">📊</span>
+          <span>Dashboard</span>
+        </div>
+        
+        <div class="menu-section-title">
+          <span>Subjects</span>
+          <button class="add-subject-btn-mini" id="sidebar-add-subject-btn" title="Add Subject">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+        
+        <div id="sidebar-subjects-list">
+          <!-- Dynamically populated subjects -->
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="menu-item" id="nav-settings">
+          <span class="subject-icon">⚙️</span>
+          <span>Settings</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main>
+      
+      <!-- 1. Dashboard View -->
+      <section id="view-dashboard" class="view-panel active">
+        <div class="welcome-section">
+          <h1 id="greeting-text">Hello, Kittappa!</h1>
+          <p>Welcome to your personal Study Room. Choose a subject below to activate your multimodal AI tools.</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">📚</div>
+            <div class="stat-info">
+              <div class="stat-val" id="stats-subjects-count">0</div>
+              <div class="stat-label">Total Subjects</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📝</div>
+            <div class="stat-info">
+              <div class="stat-val" id="stats-quizzes-count">0</div>
+              <div class="stat-label">Quizzes Completed</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🎴</div>
+            <div class="stat-info">
+              <div class="stat-val" id="stats-flashcards-count">0</div>
+              <div class="stat-label">Cards Reviewed</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <h2>Your Active Subjects</h2>
+          <button class="btn btn-primary" id="dashboard-add-subject-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add New Subject
+          </button>
+        </div>
+
+        <div class="subjects-grid" id="subjects-container">
+          <!-- Dynamically populated subject cards -->
+        </div>
+      </section>
+
+      <!-- 2. Subject Workspace View -->
+      <section id="view-subject-workspace" class="view-panel">
+        <div class="workspace-header" id="workspace-header-element">
+          <div class="workspace-title-info">
+            <div class="subject-card-icon-wrapper" id="ws-subject-icon">💡</div>
+            <div>
+              <h2 id="ws-subject-title">Subject Title</h2>
+              <p id="ws-subject-desc">Subject description text.</p>
+            </div>
+          </div>
+          <button class="btn btn-secondary" id="ws-back-to-dashboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform:rotate(180deg); margin-right:4px;">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+            Back to Dashboard
+          </button>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="workspace-tabs" id="ws-theme-tab-bar">
+          <button class="workspace-tab active" data-tab="tab-chat">💬 Tutor Chat</button>
+          <button class="workspace-tab" data-tab="tab-live-room">🎙️ Live Room</button>
+          <button class="workspace-tab" data-tab="tab-materials">📖 Study Material</button>
+          <button class="workspace-tab" data-tab="tab-podcast">📻 Podcast Studio</button>
+          <button class="workspace-tab" data-tab="tab-video">📺 Video Lecture</button>
+          <button class="workspace-tab" data-tab="tab-quizzes">📝 Quizzes</button>
+          <button class="workspace-tab" data-tab="tab-flashcards">🎴 Flashcards</button>
+        </div>
+
+        <!-- Tab 1: AI Tutor Chat -->
+        <div id="tab-chat" class="tab-pane active">
+          <div class="chat-container">
+            <div class="chat-history" id="chat-history-container">
+              <!-- Chat logs -->
+            </div>
+            
+            <div class="suggestion-chips-container" id="chat-suggestion-chips">
+              <button class="suggestion-chip" data-prompt="Explain the most difficult core concept from my study materials.">Explain Core Concept</button>
+              <button class="suggestion-chip" data-prompt="Give me a real-world analogy to remember this subject's primary topic.">Real-world Analogy</button>
+              <button class="suggestion-chip" data-prompt="Explain like I'm 5 years old.">Explain like I'm 5</button>
+              <button class="suggestion-chip" data-prompt="Ask me a challenging question to test my understanding.">Ask Socratic Question</button>
+            </div>
+
+            <div class="chat-input-area">
+              <textarea id="chat-user-input" placeholder="Ask your subject tutor a question..." rows="1"></textarea>
+              <button class="chat-send-btn" id="chat-send-button">
+                <svg viewBox="0 0 24 24">
+                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Kittappa Live Room (Voice + Camera) -->
+        <div id="tab-live-room" class="tab-pane">
+          <div class="live-room-layout">
+            
+            <!-- Left Panel: Webcam Feed -->
+            <div class="live-webcam-panel">
+              <video id="live-webcam-element" autoplay playsinline muted></video>
+              <div class="webcam-overlay" id="webcam-status-overlay">Camera Offline</div>
+              <div class="live-indicator">● LIVE</div>
+            </div>
+
+            <!-- Right Panel: Faceless Human Avatar -->
+            <div class="live-avatar-panel" id="live-avatar-container">
+              <!-- Minimalist human outline with pulsing node & sound visualizer -->
+              <svg viewBox="0 0 100 120" id="live-avatar-svg">
+                <defs>
+                  <radialGradient id="avatar-glow" cx="50%" cy="40%" r="50%">
+                    <stop offset="0%" stop-color="var(--theme-color, var(--glow-purple))" stop-opacity="0.35"/>
+                    <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
+                  </radialGradient>
+                </defs>
+                <circle cx="50" cy="50" r="45" fill="url(#avatar-glow)" />
+                <path d="M24,105 C24,78 38,68 50,68 C62,68 76,78 76,105 Z" fill="none" stroke="var(--text-secondary)" stroke-width="2" stroke-linecap="round" />
+                <circle cx="50" cy="38" r="16" fill="none" stroke="var(--text-secondary)" stroke-width="2" />
+                <circle cx="50" cy="38" r="4" class="avatar-brain-node" fill="var(--theme-color, var(--glow-purple))" />
+                <circle cx="50" cy="38" r="8" class="avatar-brain-pulse" fill="none" stroke="var(--theme-color, var(--glow-purple))" stroke-width="1" />
+                
+                <!-- Siri-like sound wave bars -->
+                <g class="voice-bars-group" transform="translate(32, 102)">
+                  <rect x="0" y="-4" width="3" height="8" rx="1.5" fill="var(--theme-color, var(--glow-purple))" class="voice-bar voice-bar-1" />
+                  <rect x="7" y="-7" width="3" height="14" rx="1.5" fill="var(--theme-color, var(--glow-purple))" class="voice-bar voice-bar-2" />
+                  <rect x="14" y="-11" width="3" height="22" rx="1.5" fill="var(--theme-color, var(--glow-purple))" class="voice-bar voice-bar-3" />
+                  <rect x="21" y="-7" width="3" height="14" rx="1.5" fill="var(--theme-color, var(--glow-purple))" class="voice-bar voice-bar-4" />
+                  <rect x="28" y="-4" width="3" height="8" rx="1.5" fill="var(--theme-color, var(--glow-purple))" class="voice-bar voice-bar-5" />
+                </g>
+              </svg>
+              <div class="avatar-status-label" id="live-tutor-status-text">Tutor Offline</div>
+            </div>
+
+          </div>
+
+          <!-- Bottom: Live Logs and Voice Controls -->
+          <div class="live-controls-section">
+            <div class="live-logs-window" id="live-transcription-log">
+              <div style="color:var(--text-muted); font-style:italic;">Click "Start Live Session" to talk directly with your tutor. Speak naturally; the tutor will listen, capture a camera frame to analyze your context, and answer you back.</div>
+            </div>
+            
+            <div class="live-buttons-row">
+              <button class="btn btn-primary btn-large" id="live-start-btn">Start Live Session</button>
+              <button class="btn btn-danger" id="live-stop-btn" style="display:none;">End Session</button>
+              <button class="btn btn-secondary" id="live-camera-toggle-btn" disabled>Camera: Off</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Study Notes & Materials -->
+        <div id="tab-materials" class="tab-pane">
+          <div class="materials-layout">
+            <div class="editor-wrapper">
+              <div class="editor-header">
+                <h3>Subject Notes & Reference Text</h3>
+                <div class="material-status-badge status-empty" id="material-status">
+                  <span class="status-dot"></span> <span id="material-status-text">No Notes Uploaded</span>
+                </div>
+              </div>
+              
+              <textarea class="materials-textarea" id="material-content-textarea" placeholder="Paste chapters, study guides, class notes, or reference texts here. The Gemini Tutor, Quiz generator, and Flashcard builder will use this text as reference knowledge."></textarea>
+              
+              <div class="materials-actions">
+                <div class="file-upload-wrapper">
+                  <button class="btn btn-secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Import File (.txt / .md / .pdf)
+                  </button>
+                  <input type="file" id="material-file-loader" accept=".txt,.md,.pdf">
+                </div>
+                <button class="btn btn-primary" id="save-material-btn">Save Study Material</button>
+              </div>
+            </div>
+
+            <div class="materials-sidebar">
+              <div class="material-help-card">
+                <h4>Why add study material?</h4>
+                <ul>
+                  <li><strong>Custom Grounding:</strong> Gemini replies will directly reference your notes rather than general online sources.</li>
+                  <li><strong>Podcast & Video:</strong> Automatically creates conversational audio reviews or structured video lessons based on your PDF/text.</li>
+                  <li><strong>Quiz Generation:</strong> The quiz builder will extract questions specifically from your uploaded syllabus.</li>
+                  <li><strong>Smart Flashcards:</strong> Gemini creates recall cards centered on key terms in your saved text.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: NotebookLM Podcast Studio -->
+        <div id="tab-podcast" class="tab-pane">
+          <div class="podcast-layout">
+            
+            <!-- Left Side: Custom Audio Show Panel -->
+            <div class="podcast-player-card">
+              <div class="podcast-visualizer-box">
+                <div class="spinning-cassette-wrapper">
+                  <!-- Classic cassette animation -->
+                  <div class="cassette-tape">
+                    <div class="tape-reel reel-left"></div>
+                    <div class="tape-reel reel-right"></div>
+                  </div>
+                </div>
+                
+                <div class="podcast-hosts-row">
+                  <div class="host-avatar" id="host-a-avatar">
+                    <span class="host-icon">🧔</span>
+                    <span class="host-name">Host A (Male)</span>
+                    <span class="host-badge">SPEAKER</span>
+                  </div>
+                  <div class="host-avatar" id="host-b-avatar">
+                    <span class="host-icon">👩</span>
+                    <span class="host-name">Host B (Female)</span>
+                    <span class="host-badge">SPEAKER</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Options configurator -->
+              <div class="podcast-options-panel">
+                <div class="form-group">
+                  <label for="podcast-style">Podcast Discussion Style</label>
+                  <select class="form-control" id="podcast-style">
+                    <option value="chatty" selected>Informal & Chatty (Fun analogies, banter)</option>
+                    <option value="debate">Rigorous Academic Debate (Deep intellectual challenges)</option>
+                    <option value="crash">Exam Prep Crash Course (Fast, formula/fact focused)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="podcast-controls">
+                <button class="btn btn-primary" id="podcast-generate-btn" style="flex:2;">Generate Podcast Episode</button>
+                <button class="btn btn-secondary" id="podcast-play-btn" style="display:none;">Play</button>
+                <button class="btn btn-danger" id="podcast-stop-btn" style="display:none;">Stop</button>
+              </div>
+            </div>
+
+            <!-- Right Side: Transcription dialog -->
+            <div class="podcast-transcript-panel">
+              <div class="editor-header">
+                <h3>Episode Script Dialogue</h3>
+              </div>
+              <div class="podcast-transcript-log" id="podcast-transcript-container">
+                <div class="transcript-placeholder" id="podcast-script-placeholder">No podcast generated yet. Click "Generate Podcast" to compile your notes into a dual-host audio show.</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tab 5: Video Lecture Studio -->
+        <div id="tab-video" class="tab-pane">
+          <div class="video-lecture-layout">
+            
+            <!-- Presentation Slide Stage -->
+            <div class="slide-presentation-stage clean-glass-theme" id="video-presentation-stage">
+              <div class="slide-content-viewport" id="video-slide-viewport">
+                <!-- Dynamic slide slides -->
+                <div class="video-slide-title">Kittappa Video Lecture Studio</div>
+                <div class="video-slide-body">
+                  <p>Welcome! Generate a video lecture to transform your written reference notes into an interactive slide presentation narrated aloud by your subject tutor.</p>
+                  <ul style="margin-top:20px; text-align:left; display:inline-block;">
+                    <li>Auto-generated visual slides</li>
+                    <li>Synchronized speech narration</li>
+                    <li>Toggle styles: Glassmorphic Slides or Chalkboard Slate</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Narration overlay caption -->
+              <div class="video-narration-caption" id="video-slide-caption">Narrator: Offline</div>
+            </div>
+
+            <!-- Video controls -->
+            <div class="video-settings-panel">
+              <div class="form-group">
+                <label for="video-theme-select">Slide Presentation Theme</label>
+                <select class="form-control" id="video-theme-select">
+                  <option value="clean-glass-theme" selected>Clean Glassmorphic Slides (Modern & Sleek)</option>
+                  <option value="chalkboard-theme">Chalkboard Slate (Hand-written & Academic)</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="video-narration-speed">Narration Audio Speed</label>
+                <select class="form-control" id="video-narration-speed">
+                  <option value="0.8">0.8x (Slower explanation)</option>
+                  <option value="1.0" selected>1.0x (Normal speed)</option>
+                  <option value="1.2">1.2x (Fast pace)</option>
+                </select>
+              </div>
+
+              <div class="video-controls-row">
+                <button class="btn btn-primary" id="video-generate-btn" style="flex:2;">Generate Video Lecture</button>
+                <button class="btn btn-secondary" id="video-play-btn" style="display:none;">Play Lecture</button>
+                <button class="btn btn-danger" id="video-stop-btn" style="display:none;">Stop Lecture</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tab 6: Interactive Practice Quizzes -->
+        <div id="tab-quizzes" class="tab-pane">
+          <div id="quiz-setup-section" class="quiz-setup-panel">
+            <h3>Generate a New Practice Quiz</h3>
+            
+            <div class="form-group">
+              <label for="quiz-question-count">Number of Questions</label>
+              <select class="form-control" id="quiz-question-count">
+                <option value="3">3 Questions</option>
+                <option value="5" selected>5 Questions</option>
+                <option value="10">10 Questions</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="quiz-question-type">Quiz Format</label>
+              <select class="form-control" id="quiz-question-type">
+                <option value="mcq" selected>Multiple Choice (MCQ)</option>
+                <option value="short">Short Answer / Essay</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="quiz-difficulty">Difficulty Level</label>
+              <select class="form-control" id="quiz-difficulty">
+                <option value="beginner">Beginner (Basic Recall)</option>
+                <option value="intermediate" selected>Intermediate (Application & Analysis)</option>
+                <option value="advanced">Advanced (Deep Conceptual Mastery)</option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary" id="generate-quiz-btn" style="width:100%; padding:14px;">
+              ✨ Generate Quiz with Gemini
+            </button>
+          </div>
+
+          <div id="quiz-runner-section" class="quiz-runner" style="display:none;">
+            <div class="quiz-progress-bar">
+              <div class="quiz-progress-fill" id="quiz-progress-fill-element"></div>
+            </div>
+            
+            <div id="quiz-questions-container">
+              <!-- Question cards -->
+            </div>
+
+            <div class="modal-footer" style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:20px;">
+              <button class="btn btn-secondary" id="quiz-prev-btn" style="display:none;">Previous</button>
+              <button class="btn btn-primary" id="quiz-next-btn">Next Question</button>
+              <button class="btn btn-success" id="quiz-submit-btn" style="display:none; background-color:var(--success); color:#fff; border:none;">Submit Quiz</button>
+            </div>
+          </div>
+
+          <div id="quiz-feedback-section" class="quiz-runner" style="display:none;">
+            <div class="quiz-results-summary">
+              <div class="quiz-score-circle" id="quiz-score-circle-element">
+                <div class="score-num" id="quiz-score-display">0%</div>
+                <div class="score-lbl">Score</div>
+              </div>
+              <h3 id="quiz-feedback-headline">Quiz Completed!</h3>
+              <p style="color:var(--text-secondary); margin-top:8px;">Below is the grading report from Gemini, including correct answers and custom explanations.</p>
+            </div>
+
+            <div class="quiz-feedback-list" id="quiz-feedback-list-element">
+              <!-- Grade reports -->
+            </div>
+
+            <div style="text-align:center; margin-top:32px;">
+              <button class="btn btn-primary" id="quiz-restart-btn">Take Another Quiz</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 7: Flashcards View -->
+        <div id="tab-flashcards" class="tab-pane">
+          <div id="flashcard-setup-section" class="deck-selector-panel">
+            <h3>Active Recall Flashcards</h3>
+            <p style="color:var(--text-secondary); max-width:450px; margin:0 auto;">Flashcards are generated from your Study Materials to test key terms and core concepts. Flip the cards to view details and mark your recall state.</p>
+            <button class="btn btn-primary" id="generate-flashcards-btn" style="align-self:center; margin-top:10px;">
+              ✨ Generate Flashcard Deck
+            </button>
+          </div>
+
+          <div id="flashcard-viewer-section" class="flashcards-layout" style="display:none;">
+            <div class="deck-progress-bar">
+              <span id="flashcard-counter">Card 1 of 5</span>
+              <div class="deck-progress-dots" id="flashcard-progress-dots">
+                <!-- dots -->
+              </div>
+            </div>
+
+            <div class="flashcard-wrapper" id="flashcard-wrapper-element">
+              <div class="flashcard">
+                <div class="flashcard-face flashcard-front">
+                  <span class="flashcard-label">Question</span>
+                  <div class="flashcard-text" id="flashcard-question-text">Front Face Question</div>
+                  <span class="flashcard-hint">Click card to reveal answer</span>
+                </div>
+                <div class="flashcard-face flashcard-back">
+                  <span class="flashcard-label">Answer / Explanation</span>
+                  <div class="flashcard-text" id="flashcard-answer-text">Back Face Answer</div>
+                  <span class="flashcard-hint">Click card to hide answer</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flashcard-controls">
+              <button class="btn btn-danger" id="flashcard-hard-btn">❌ Needs Review</button>
+              <button class="btn btn-secondary" id="flashcard-next-btn">Next Card</button>
+              <button class="btn btn-success" id="flashcard-easy-btn" style="background-color:var(--success); color:#fff; border:none;">✅ Got It!</button>
+            </div>
+            
+            <button class="btn btn-secondary" id="flashcard-reset-deck-btn" style="font-size:0.8rem; padding:6px 12px; border:none; color:var(--text-muted);">
+              Reset & Regenerate Deck
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Settings View -->
+      <section id="view-settings" class="view-panel">
+        <div class="settings-layout">
+          <div>
+            <h2 class="settings-section-title">Gemini API Settings</h2>
+            <p style="color:var(--text-secondary); font-size:0.88rem; margin-bottom:16px;">Configure your API credentials. These settings are stored locally on your machine and only used to query Google's services.</p>
+            
+            <div class="form-group" style="margin-bottom:16px;">
+              <label for="settings-api-key">Gemini API Key</label>
+              <div class="api-key-input-wrapper">
+                <input type="password" class="form-control" id="settings-api-key" placeholder="AIzaSy..." style="flex:1;">
+                <button class="btn btn-secondary" id="toggle-api-visibility">Show</button>
+              </div>
+              <div class="api-key-status">
+                <span class="api-status-dot" id="api-status-dot"></span>
+                <span id="api-status-text" style="color:var(--text-secondary);">No API key configured</span>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:16px;">
+              <label for="settings-model-select">Gemini Model Choice</label>
+              <select class="form-control" id="settings-model-select">
+                <!-- models -->
+              </select>
+            </div>
+            
+            <div class="form-group" style="margin-bottom:16px;">
+              <label for="settings-temperature">Creativity (Temperature)</label>
+              <input type="range" min="0.1" max="1.0" step="0.1" value="0.7" id="settings-temperature" style="accent-color:var(--glow-purple);">
+              <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
+                <span>0.1 (Precise/Factual)</span>
+                <span id="temp-val-display">0.7</span>
+                <span>1.0 (Creative/Exploratory)</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h2 class="settings-section-title">AI Tutor Profile & Voices</h2>
+            <div class="form-group" style="margin-bottom:16px;">
+              <label for="settings-persona">Default Tutor Persona</label>
+              <select class="form-control" id="settings-persona">
+                <option value="socratic">Socratic Method (Asks questions to guide you)</option>
+                <option value="friendly" selected>Friendly & Encouraging (Patient mentor)</option>
+                <option value="rigorous">Rigorous & Academic (Precise explanations)</option>
+                <option value="analogy">Visual Explainer (Draws analogies and real-world links)</option>
+              </select>
+            </div>
+
+            <!-- Subject-specific voice overrides -->
+            <div class="form-group">
+              <label>Subject Voice Genders</label>
+              <div style="display:flex; flex-direction:column; gap:10px; margin-top:6px;" id="settings-subject-voices-container">
+                <!-- Dynamically listed voice choices for presets -->
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:16px; display:flex; justify-content:space-between; border-top:1px solid var(--border-color); padding-top:24px;">
+            <button class="btn btn-danger" id="settings-clear-data-btn">Reset All Subject Data</button>
+            <button class="btn btn-primary" id="settings-save-btn">Save Configuration</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Modal: Create / Edit Subject -->
+  <div class="modal-overlay" id="subject-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="subject-modal-title">Create New Subject</h3>
+        <button class="modal-close-btn" id="subject-modal-close">&times;</button>
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px;">
+        <label for="subject-name">Subject Name</label>
+        <input type="text" class="form-control" id="subject-name" placeholder="e.g. World History, Quantum Physics">
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px;">
+        <label for="subject-desc">Short Description</label>
+        <input type="text" class="form-control" id="subject-desc" placeholder="e.g. Study of historical epochs, AP Exam syllabus">
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px;">
+        <label for="subject-icon">Emoji Icon</label>
+        <select class="form-control" id="subject-icon" style="font-size:1.15rem;">
+          <option value="📚">📚 Books</option>
+          <option value="💡">💡 Idea/Concept</option>
+          <option value="🔬">🔬 Science/Lab</option>
+          <option value="🔢">🔢 Mathematics</option>
+          <option value="💻">💻 Computer Science</option>
+          <option value="🏛️">🏛️ History/Civilization</option>
+          <option value="🌎">🌎 Geography/Ecology</option>
+          <option value="🧬">🧬 Biology/Genetics</option>
+          <option value="🎭">🎭 Literature/Arts</option>
+          <option value="⚖️">⚖️ Law/Civics</option>
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px;">
+        <label for="subject-voice-gender">Preferred Voice Gender</label>
+        <select class="form-control" id="subject-voice-gender">
+          <option value="female">Female Voice</option>
+          <option value="male">Male Voice</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Theme Color Accent</label>
+        <div class="color-picker-grid" id="color-picker-grid">
+          <div class="color-option selected" data-color="hsl(262, 85%, 65%)" style="background-color:hsl(262, 85%, 65%); color:rgba(138,92,246,0.3)"></div>
+          <div class="color-option" data-color="hsl(210, 90%, 60%)" style="background-color:hsl(210, 90%, 60%); color:rgba(59,130,246,0.3)"></div>
+          <div class="color-option" data-color="hsl(145, 65%, 45%)" style="background-color:hsl(145, 65%, 45%); color:rgba(16,185,129,0.3)"></div>
+          <div class="color-option" data-color="hsl(40, 85%, 50%)" style="background-color:hsl(40, 85%, 50%); color:rgba(245,158,11,0.3)"></div>
+          <div class="color-option" data-color="hsl(355, 75%, 55%)" style="background-color:hsl(355, 75%, 55%); color:rgba(239,68,68,0.3)"></div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="subject-modal-cancel">Cancel</button>
+        <button class="btn btn-primary" id="subject-modal-save">Create Subject</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
